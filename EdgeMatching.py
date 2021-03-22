@@ -114,7 +114,9 @@ def getHisto(cornerinfo):
   mag = np.array(cornerinfo[0]).flatten().tolist()
   ori = np.array(cornerinfo[1]).flatten().tolist()
   for i in range(len(ori)):
-    histo[int((ori[i]%360)/angleRange)] += mag[i];
+    ratio = (angleRange - (ori[i]%360%angleRange)) / angleRange
+    histo[int((ori[i]%360)/angleRange)] += mag[i]* ratio
+    histo[(int((ori[i]%360)/angleRange)+1)%10] += mag[i]* (1-ratio)
   return histo
 
 
@@ -126,7 +128,7 @@ def drawHisto(histo, title):
     rangeValue.append(36*i)
   x = np.arange(int(360/angleRange))
   y = np.arange(int(360/angleRange)+1)
-  plt.figure(figsize=(3,3))
+  plt.figure(figsize=(4,4))
   plt.bar(x, histo, width= 1, align='edge')
   plt.xticks(y, rangeValue)
   plt.xlim([0, 360/angleRange])
