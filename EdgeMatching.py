@@ -129,7 +129,7 @@ def drawHisto(histo, title):
   x = np.arange(int(360/angleRange))
   y = np.arange(int(360/angleRange)+1)
   plt.figure(figsize=(4,4))
-  plt.bar(x, histo, width= 1, align='edge')
+  plt.bar(x, histo, width= 1, align='center')
   plt.xticks(y, rangeValue)
   plt.xlim([0, 360/angleRange])
   plt.title(title)
