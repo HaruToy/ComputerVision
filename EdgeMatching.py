@@ -107,6 +107,16 @@ def get_Mag_Ori(edge,PATCH):
     cornerinfo.append([mag,ori])
   return cornerinfo;
 
+#히스토그램 normalization
+def normalizeHisto(histo):
+  total = 0.0;
+  for i in range(len(histo)):
+    total += histo[i]**2
+  total = total**0.5
+  for i in range(len(histo)):
+    histo[i] = histo[i]/total;
+  return histo
+
 #히스토그램 리스트 만들기
 #input cornerinfo -> [mag, ori]
 def getHisto(cornerinfo):
@@ -117,21 +127,21 @@ def getHisto(cornerinfo):
     ratio = (angleRange - (ori[i]%360%angleRange)) / angleRange
     histo[int((ori[i]%360)/angleRange)] += mag[i]* ratio
     histo[(int((ori[i]%360)/angleRange)+1)%10] += mag[i]* (1-ratio)
-  return histo
+  return normalizeHisto(histo)
 
 
 #히스토그램 이미지 출력  
 def drawHisto(histo, title):
   
   rangeValue = []
-  for i in range(int(360/angleRange)+1):
+  for i in range(int(360/angleRange)):
     rangeValue.append(36*i)
   x = np.arange(int(360/angleRange))
-  y = np.arange(int(360/angleRange)+1)
   plt.figure(figsize=(4,4))
   plt.bar(x, histo, width= 1, align='center')
-  plt.xticks(y, rangeValue)
+  plt.xticks(x, rangeValue)
   plt.xlim([0, 360/angleRange])
+  plt.ylim([0, 1])
   plt.title(title)
   
 
