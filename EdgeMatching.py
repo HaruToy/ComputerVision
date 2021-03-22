@@ -111,8 +111,10 @@ def get_Mag_Ori(edge,PATCH):
 #input cornerinfo -> [mag, ori]
 def getHisto(cornerinfo):
   histo = [0 for i in range(int(360/angleRange))]
-  for i in range(len(cornerinfo[0][0])):
-    histo[int((cornerinfo[1][0][i]%360)/angleRange)] += cornerinfo[0][0][i];
+  mag = np.array(cornerinfo[0]).flatten().tolist()
+  ori = np.array(cornerinfo[1]).flatten().tolist()
+  for i in range(len(ori)):
+    histo[int((ori[i]%360)/angleRange)] += mag[i];
   return histo
 
 
