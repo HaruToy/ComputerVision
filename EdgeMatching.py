@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import matplotlib.pyplot as plt
 
 # corner index
 i=1
@@ -14,6 +15,9 @@ b1 = np.zeros((7,7))
 b2 = np.zeros((7,7))
 b3 = np.zeros((7,7))
 b4 = np.zeros((7,7))
+
+#각도 단위
+angleRange = 36
 
 def pickPoint(event, x, y, flags, img): # picking Point - when mouse clicked
     global i
@@ -103,6 +107,29 @@ def get_Mag_Ori(edge,PATCH):
     cornerinfo.append([mag,ori])
   return cornerinfo;
 
+#히스토그램 리스트 만들기
+#input cornerinfo -> [mag, ori]
+def getHisto(cornerinfo):
+  histo = [0 for i in range(int(360/angleRange))]
+  for i in range(len(cornerinfo[0][0])):
+    histo[int((cornerinfo[1][0][i]%360)/angleRange)] += cornerinfo[0][0][i];
+  return histo
+
+
+#히스토그램 이미지 출력  
+def drawHisto(histo, title):
+  
+  rangeValue = []
+  for i in range(int(360/angleRange)+1):
+    rangeValue.append(36*i)
+  x = np.arange(int(360/angleRange))
+  y = np.arange(int(360/angleRange)+1)
+  plt.figure(figsize=(3,3))
+  plt.bar(x, histo, width= 1, align='edge')
+  plt.xticks(y, rangeValue)
+  plt.xlim([0, 360/angleRange])
+  plt.title(title)
+  
 
 def cornerDetect(): # main function for corner detecting
     img1path = './imgs/1st.jpg'
@@ -151,9 +178,16 @@ def cornerDetect(): # main function for corner detecting
     cv2.imshow('Image 2', img2resized)
     cv2.imshow('Image 1', img1resized)
     #calculate Magnitude and Orientation
-    get_Mag_Ori(corner, 5)
-
+    result = get_Mag_Ori(corner, 5)
+    histo = []
+    for k in range(len(result)):
+        histo.append(getHisto(result[k]))
+        drawHisto(histo[k],str(int(k/4+1))+'-'+str(k%4+1))
+    plt.show()
     cv2.waitKey(0)
+
+
+
 
 msg = input("To start the program, enter 'start': ")
 if str(msg) == 'start':
