@@ -175,19 +175,21 @@ def cornerDetect(): # main function for corner detecting
             cv2.setMouseCallback("Image 2", pickPoint, img2resized)
 
         # to check the saved images
-        cv2.imshow("a1", a1)
-        cv2.imshow("a2", a2)
-        cv2.imshow("a3", a3)
-        cv2.imshow("a4", a4)
-        cv2.imshow("b1", b1)
-        cv2.imshow("b2", b2)
-        cv2.imshow("b3", b3)
-        cv2.imshow("b4", b4)
+        # cv2.imshow("a1", a1)
+        # cv2.imshow("a2", a2)
+        # cv2.imshow("a3", a3)
+        # cv2.imshow("a4", a4)
+        # cv2.imshow("b1", b1)
+        # cv2.imshow("b2", b2)
+        # cv2.imshow("b3", b3)
+        # cv2.imshow("b4", b4)
 
         if i==9: #end to select
             cv2.destroyAllWindows()
+            print('All points are selected!')
             break
         if cv2.waitKey(20) & 0xFF == 27: # esc key to end!
+            print('End!')
             return
     cv2.imshow('Image 2', img2resized)
     cv2.imshow('Image 1', img1resized)
