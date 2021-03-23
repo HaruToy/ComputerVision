@@ -139,7 +139,7 @@ def getHisto(cornerinfo):
     for i in range(len(ori)):
         ratio = (angleRange - (ori[i] % 360 % angleRange)) / angleRange
         histo[int((ori[i] % 360) / angleRange)] += mag[i] * ratio
-        histo[(int((ori[i] % 360) / angleRange) + 1) % 10] += mag[i] * (1 - ratio)
+        histo[(int((ori[i] % 360) / angleRange) + 1) % (int(360 / angleRange))] += mag[i] * (1 - ratio)
     return normalizeHisto(histo)
 
 
@@ -213,9 +213,10 @@ def cornerDetect():  # main function for corner detecting
     # calculate Magnitude and Orientation
     result = get_Mag_Ori(corner, patch)
     histo = []
+    plt.figure(figsize=(16, 8))
     for k in range(len(result)):
         histo.append(getHisto(result[k]))
-        drawHisto(histo[k], str(int(k / 4 + 1)) + '-' + str(k % 4 + 1))
+        drawHisto(histo[k], k)
     plt.show()
 
     # 이미지 가로로 붙이기
