@@ -105,16 +105,16 @@ def get_Mag_Ori(edge,PATCH):
     sobelY = sobelY[1:PATCH + 1, 1:PATCH + 1]
     mag, ori = cv2.cartToPolar(sobelX, sobelY, angleInDegrees=True)
     cornerinfo.append([mag,ori])
-  return cornerinfo;
+  return cornerinfo
 
 #히스토그램 normalization
 def normalizeHisto(histo):
-  total = 0.0;
+  total = 0.0
   for i in range(len(histo)):
     total += histo[i]**2
   total = total**0.5
   for i in range(len(histo)):
-    histo[i] = histo[i]/total;
+    histo[i] = histo[i]/total
   return histo
 
 #히스토그램 리스트 만들기
