@@ -137,7 +137,7 @@ def getHisto(cornerinfo):
     for i in range(len(ori)):
         ratio = (angleRange - (ori[i] % 360 % angleRange)) / angleRange
         histo[int((ori[i] % 360) / angleRange)] += mag[i] * ratio
-        histo[(int((ori[i] % 360) / angleRange) + 1) % 10] += mag[i] * (1 - ratio)
+        histo[(int((ori[i] % 360) / angleRange) + 1) % (int(360 / angleRange))] += mag[i] * (1 - ratio)
     return normalizeHisto(histo)
 
 
