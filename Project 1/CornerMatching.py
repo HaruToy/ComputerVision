@@ -1,3 +1,7 @@
+### 2021-1 컴퓨터비전 - 프로젝트 1
+### 6조
+
+
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
@@ -171,7 +175,7 @@ def cornerDetect():  # main function for corner detecting
 
     h,w =img1resized.shape
 
-    desc = np.full((200, 300, 3), 255, dtype=np.uint8)  # program description window
+    desc = np.full((300, 300, 3), 255, dtype=np.uint8)  # program description window
     cv2.putText(desc, "<How to use this program>", (20, 40), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.6,
                 color=(0, 0, 0), thickness=1)
     cv2.putText(desc, "1. Pick 4 points on image1", (30, 80), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5,
@@ -181,6 +185,9 @@ def cornerDetect():  # main function for corner detecting
     cv2.putText(desc, "You have to double click", (40, 140), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5,
                 color=(0, 0, 0))
     cv2.putText(desc, "on the images!", (80, 160), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 0, 0))
+    cv2.putText(desc, "Close histogram window", (50, 200), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 0, 0))
+    cv2.putText(desc, "to see the results!", (80, 230), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 0, 0))
+
 
     while True:
 
@@ -205,8 +212,10 @@ def cornerDetect():  # main function for corner detecting
 
         if i == 9:  # end to select
             cv2.destroyAllWindows()
+            print('Program End!')
             break
         if cv2.waitKey(20) & 0xFF == 27:  # esc key to end!
+            print("Program End!")
             return
 
     cv2.imshow('Image 2', img2resized)
