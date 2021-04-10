@@ -13,15 +13,22 @@ def InverseMapping(h,im_src,im_dst,im_src_mask):
   img_src_point=np.matmul(h,img_dst_point)
   third=img_src_point[2:]
   img_src_point=img_src_point[:2]/third
-  img_src_point=np.round(img_src_point, 0).astype(np.int)
   im_out=im_dst
-
+  
+  
+  img_t = np.floor(img_src_point).astype(int)
+  a = np.subtract(img_src_point, img_t)
+  
   for i in range(img_src_point.shape[1]):
-      x_d=  img_src_point[0][i]
-      y_d = img_src_point[1][i]
+      x_d=  img_t[0][i]
+      y_d = img_t[1][i]
+      alpha = a[0][i]
+      beta = a[1][i]
       if x_d>0 and x_d<im_src.shape[1] and y_d>0 and y_d<im_src.shape[0] and im_src_mask[y_d,x_d][0]!=0 and im_src_mask[y_d,x_d][1]!=0 and im_src_mask[y_d,x_d][2]!=0:
-        im_out[img_dst_point[1][i],img_dst_point[0][i]] = im_src[y_d,x_d]
+        im_out[img_dst_point[1][i],img_dst_point[0][i]] = np.round((1-alpha)*(1-beta)*im_src[y_d,x_d] + alpha*(1-beta)*im_src[y_d,x_d + 1] + alpha*beta*im_src[y_d + 1,x_d + 1] + (1-alpha)*beta*im_src[y_d+1,x_d], 0).astype(int)
   return im_out
+
+
 
 if __name__ == '__main__':
 
