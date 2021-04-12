@@ -9,9 +9,6 @@ pts_dst = np.array([0, 0])
 def savePoint(event, x, y, flags, img):
     global i, pts_src, pts_dst
     if event == cv2.EVENT_LBUTTONDBLCLK:
-        print(i)
-        print(pts_src)
-        print(pts_dst)
         if i == 0:
             pts_src = np.array([x, y])
             cv2.circle(img, (x, y), radius=6, color=(0, 0, 0), thickness=2)
@@ -26,6 +23,8 @@ def savePoint(event, x, y, flags, img):
             cv2.circle(img, (x, y), radius=6, color=(0, 0, 0), thickness=2)
 
         i += 1
+
+
 def makeHomography(p_src,p_dst):
 
     x1 = p_src[0][0]
@@ -64,12 +63,11 @@ def makeHomography(p_src,p_dst):
     H = np.array([[b[0], b[1], b[2]],
                   [b[3], b[4], b[5]],
                   [b[6], b[7], b[8]]])
-    print(H)
+    # print(H)
     return H
 
 
-
-def InverseMapping(h, im_src, im_dst, im_src_mask):
+def InverseMapping(h, im_dst):
     h = np.linalg.inv(h)
     img_dst_point = []
     for j in range(0, im_dst.shape[1]):
@@ -82,6 +80,11 @@ def InverseMapping(h, im_src, im_dst, im_src_mask):
     third = img_src_point[2:]
     img_src_point = img_src_point[:2] / third
     im_out = im_dst
+
+    return img_src_point, img_dst_point, im_out
+
+
+def warpImage(img_src_point, img_dst_point, im_src_mask, im_src, im_out):
 
     img_t = np.floor(img_src_point).astype(int)
     a = np.subtract(img_src_point, img_t)
@@ -101,14 +104,15 @@ def InverseMapping(h, im_src, im_dst, im_src_mask):
 
 if __name__ == '__main__':
 
-    imgpath = './gogh.jpg'
-    targetpath = './target.jpeg'
+    imgpath = './imgs/gogh.jpg'
+    targetpath = './imgs/target.jpeg'
 
     img = cv2.imread(imgpath, cv2.IMREAD_UNCHANGED)
     target = cv2.imread(targetpath, cv2.IMREAD_UNCHANGED)
 
     im_src = cv2.resize(img, dsize=(0, 0), fx=0.7, fy=0.7, interpolation=cv2.INTER_LINEAR)
     im_dst = cv2.resize(target, dsize=(0, 0), fx=0.7, fy=0.7, interpolation=cv2.INTER_LINEAR)
+    result_img = im_dst.copy()
 
     while True:
 
@@ -137,13 +141,13 @@ if __name__ == '__main__':
         H = makeHomography(pts_src,pts_dst)
 
         # Inverse Mapping
-        im_out = InverseMapping(H, im_src, im_dst, im_src_mask)
+        img_src_point, img_dst_point, im_out = InverseMapping(H,result_img)
 
         # Warp source image to destination based on homography
-        # im_out = cv2.warpPerspective(im_src, h, (im_dst.shape[1], im_dst.shape[0]))
+        im_out = warpImage(img_src_point, img_dst_point, im_src_mask,im_src, im_out)
 
         # Display images
         cv2.imshow("Warped Source Image", im_out)
-        cv2.imshow("Warped Source1 Image", im_src)
+        # cv2.imshow("Source Image", im_src)
 
         cv2.waitKey(0)
